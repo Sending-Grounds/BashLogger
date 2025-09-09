@@ -1,10 +1,17 @@
 # Library
+#======== ANSI Colors ========#
+export RED="\e[0;31m"
+export YELLOW="\e[0;33m"
+export BLUE="\e[0;34m"
+export RESET="\e[0m"
 
 # Bash Logger function takes log level and message as 
 function log() {
   local log_level=""
   local message=""
   local timestamp=""
+  local lineno=""
+  lineno="${BASH_LINENO[1]}"
   timestamp=$(date +'%Y-%m-%d %H:%M:%S')
 
   if [[ $# -eq 1 ]]; then
@@ -17,17 +24,17 @@ function log() {
   fi
   
   if [[ ${log_level^^} == "INFO" ]]; then
-    printf "%s [INFO] %s\n" "${timestamp}" "${message}"
+    printf "%s [L:%03d] [INFO] %s\n" "${timestamp}" "${lineno}" "${message}"
   elif [[ ${log_level^^} == "ERROR" ]]; then
-    printf "%s [ERROR] %s\n" "${timestamp}" "${message}" >&2
+    printf "%s [L:%03d] ${RED}[ERROR]${RESET} %s\n" "${timestamp}" "${lineno}" "${message}" >&2
   elif [[ ${log_level^^} == "WARN" ]]; then
-    printf "%s [WARN] %s\n" "${timestamp}" "${message}"
+    printf "%s [L:%03d] ${YELLOW}[WARN]${RESET} %s\n" "${timestamp}" "${lineno}" "${message}"
   elif [[ ${log_level^^} == "DEBUG" ]] && [[ ${DEBUG} == "True" ]]; then
-    printf "%s [DEBUG] %s\n" "${timestamp}" "${message}" >&2
+    printf "%s [L:%03d] [DEBUG] %s\n" "${timestamp}" "${lineno}" "${message}" >&2
   elif [[ ${log_level^^} == "DEBUG" ]] && [[ ${DEBUG} != "True" ]]; then
     : # print nothing to avoid catching fatal
   elif [[ ${log_level^^}} == "TRACE" ]] && [[ ${TRACE} = "True" ]]; then
-    printf "%s [TRACE] %s\n" "${timestamp}" "${message}" >&2
+    printf "%s [L:%03d] ${BLUE}[TRACE]${RESET} %s\n" "${timestamp}" "${lineno}" "${message}" >&2
   elif [[ ${log_level^^} == "TRACE" ]] && [[ ${TRACE} != "True" ]]; then
     : # print nothing to avoid catching fatal
   else
@@ -36,7 +43,13 @@ function log() {
   fi
 }
 
-# wrapper for log debug
+#--------- wrappers for log commands ---------# 
+function log_trace(){
+  local log_message=$1
+
+  log "TRACE" "${log_message}"
+}
+
 function log_debug(){
   local log_message=$1
 
