@@ -23,19 +23,19 @@ function log() {
     message=${2} # Bash-ish to convert to quoted string
   fi
   
-  if [[ ${log_level^^} == "INFO" ]]; then
+  if [[ ${log_level} == "INFO" ]]; then
     printf "%s [L:%03d] [INFO] %s\n" "${timestamp}" "${lineno}" "${message}"
-  elif [[ ${log_level^^} == "ERROR" ]]; then
+  elif [[ ${log_level} == "ERROR" ]]; then
     printf "%s [L:%03d] ${RED}[ERROR]${RESET} %s\n" "${timestamp}" "${lineno}" "${message}" >&2
-  elif [[ ${log_level^^} == "WARN" ]]; then
+  elif [[ ${log_level} == "WARN" ]]; then
     printf "%s [L:%03d] ${YELLOW}[WARN]${RESET} %s\n" "${timestamp}" "${lineno}" "${message}"
-  elif [[ ${log_level^^} == "DEBUG" ]] && [[ ${DEBUG} == "True" ]]; then
+  elif [[ ${log_level} == "DEBUG" ]] && [[ ${DEBUG} == "True" ]]; then
     printf "%s [L:%03d] [DEBUG] %s\n" "${timestamp}" "${lineno}" "${message}" >&2
-  elif [[ ${log_level^^} == "DEBUG" ]] && [[ ${DEBUG} != "True" ]]; then
+  elif [[ ${log_level} == "DEBUG" ]] && [[ ${DEBUG} != "True" ]]; then
     : # print nothing to avoid catching fatal
-  elif [[ ${log_level^^}} == "TRACE" ]] && [[ ${TRACE} = "True" ]]; then
+  elif [[ ${log_level} == "TRACE" ]] && [[ ${TRACE} == "True" ]]; then
     printf "%s [L:%03d] ${BLUE}[TRACE]${RESET} %s\n" "${timestamp}" "${lineno}" "${message}" >&2
-  elif [[ ${log_level^^} == "TRACE" ]] && [[ ${TRACE} != "True" ]]; then
+  elif [[ ${log_level} == "TRACE" ]] && [[ ${TRACE} != "True" ]]; then
     : # print nothing to avoid catching fatal
   else
     printf "%s [FATAL] %s is not a valid option.\nValid options for the log() function are: TRACE, DEBUG, INFO, WARN, ERROR\n" "${timestamp}" "${log_level}"
